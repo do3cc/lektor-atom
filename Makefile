@@ -2,12 +2,11 @@
 
 test-python: ## Run tests on Python files.
 	@echo "---> running python tests"
-	tox -e py
+	tox p
 
 .PHONY: lint
 lint: ## Lint code.
 	pre-commit run -a
-	tox -e lint
 
 .PHONY: test
 test: lint test-python

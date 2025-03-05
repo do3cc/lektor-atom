@@ -1,15 +1,18 @@
 [build-system]
 requires = ["hatchling>=1.13.0,<2.0.0", "hatch-vcs"]
-	build-backend = "hatchling.build"
+build-backend = "hatchling.build"
 
 [project]
 name = "lektor-atom"
 description = "Lektor plugin that generates Atom feeds."
 keywords = ["Lektor", "plugin", "static-site", "blog", "atom", "rss"]
+version = "0.4.0"
 readme = "README.md"
 authors = [
     {name = "A. Jesse Jiryu Davis", email = "jesse@emptysquare.net"},
 ]
+requires-python = ">=3.8"
+license-expression = "MIT"
 classifiers = [
     "Environment :: Plugins",
     "Environment :: Web Environment",
@@ -20,20 +23,28 @@ classifiers = [
 dependencies = [
     "MarkupSafe",
     "feedgenerator",
+    "tox>=4.24.1",
 ]
-license = {text = "MIT"}
-requires-python = ">=3.12"
 
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+    "lektor",
+    "lxml"
+
+    ]
 [project.urls]
 Homepage = "https://github.com/lektor/lektor-atom"
 
-[project.optional-dependencies]
-test = [
-    "pytest",
-]
-
 [project.entry-points."lektor.plugins"]
 atom = "lektor_atom:AtomPlugin"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+    ]
+
 ################################################################
 #
 # pylint
@@ -47,32 +58,27 @@ extension-pkg-allow-list = "lxml"
 max-line-length = 91
 max-module-lines = 2000
 
-[tool.pylint.design]
-#max-attributes = 20
-#max-positional-arguments = 7   # default is 5
-#max-locals = 30
-#max-branches = 20
-#max-nested-blocks = 8
-#max-returns = 8
-
-
 [tool.pylint."messages control"]
 disable = [
-#    "redundant-u-string-prefix",
-#    "consider-using-f-string",
     "missing-docstring",
-#    "unused-argument",
-#    "redefined-outer-name",
-#    "invalid-name",
-#    "protected-access",
-#    "fixme",
-#    "broad-except",
-#    "redefined-builtin",
-#    "too-many-arguments",
-#    "too-few-public-methods",
-#    "too-many-public-methods",
-#    "duplicate-code",
-#    "unnecessary-dunder-call",
 ]
 
 
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = [
+    "3.14",
+    "3.13",
+    "3.12",
+    "3.11",
+    "3.10",
+    "3.9",
+    "3.8",
+]
+
+[tool.tox.env_run_base]
+description = "Run test under {base_python}"
+dependency_groups = [
+    "dev",
+]
+commands = [["pytest"]]

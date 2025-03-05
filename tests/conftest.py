@@ -1,16 +1,15 @@
-# pylint: disable=W0613,W0621
+from datetime import datetime
 import os
 import shutil
 import tempfile
-from datetime import datetime
 
-import pytest
 from lektor import db
 from lektor.builder import Builder
 from lektor.environment import Environment
 from lektor.project import Project
 from lektor.reporter import BufferReporter
 from lektor.types import Type
+import pytest
 
 
 class DatetimeType(Type):

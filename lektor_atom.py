@@ -1,7 +1,7 @@
-import hashlib
-import uuid
 from datetime import date
 from datetime import datetime
+import hashlib
+import uuid
 
 import click
 from feedgenerator.django.utils.feedgenerator import Atom1Feed
