@@ -1,9 +1,39 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.13.0,<2.0.0", "hatch-vcs"]
+	build-backend = "hatchling.build"
 
-[tool.setuptools_scm]
+[project]
+name = "lektor-atom"
+description = "Lektor plugin that generates Atom feeds."
+keywords = ["Lektor", "plugin", "static-site", "blog", "atom", "rss"]
+readme = "README.md"
+authors = [
+    {name = "A. Jesse Jiryu Davis", email = "jesse@emptysquare.net"},
+]
+classifiers = [
+    "Environment :: Plugins",
+    "Environment :: Web Environment",
+    "Framework :: Lektor",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "MarkupSafe",
+    "feedgenerator",
+]
+license = {text = "MIT"}
+requires-python = ">=3.12"
 
+[project.urls]
+Homepage = "https://github.com/lektor/lektor-atom"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.entry-points."lektor.plugins"]
+atom = "lektor_atom:AtomPlugin"
 ################################################################
 #
 # pylint
@@ -44,4 +74,5 @@ disable = [
 #    "duplicate-code",
 #    "unnecessary-dunder-call",
 ]
+
 
