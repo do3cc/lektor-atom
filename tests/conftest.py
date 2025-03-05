@@ -1,9 +1,15 @@
+# pylint: disable=W0613,W0621
 import os
 import shutil
 import tempfile
 from datetime import datetime
 
 import pytest
+from lektor import db
+from lektor.builder import Builder
+from lektor.environment import Environment
+from lektor.project import Project
+from lektor.reporter import BufferReporter
 from lektor.types import Type
 
 
@@ -14,15 +20,11 @@ class DatetimeType(Type):
 
 @pytest.fixture(scope="function")
 def project(request):
-    from lektor.project import Project
-
     return Project.from_path(os.path.join(os.path.dirname(__file__), "demo-project"))
 
 
 @pytest.fixture(scope="function")
 def env(request, project):
-    from lektor.environment import Environment
-
     e = Environment(project)
     e.types["datetime"] = DatetimeType  # As if we had a datetime plugin.
     return e
@@ -30,21 +32,17 @@ def env(request, project):
 
 @pytest.fixture(scope="function")
 def pad(request, env):
-    from lektor.db import Database
-
-    return Database(env).new_pad()
+    return db.Database(env).new_pad()
 
 
 def make_builder(request, pad):
-    from lektor.builder import Builder
-
     out = tempfile.mkdtemp()
     b = Builder(pad, out)
 
     def cleanup():
         try:
             shutil.rmtree(out)
-        except (OSError, IOError):
+        except OSError:
             pass
 
     request.addfinalizer(cleanup)
@@ -57,16 +55,12 @@ def builder(request, pad):
 
 
 @pytest.fixture(scope="function")
-def F():
-    from lektor.db import F
-
-    return F
+def F():  # pylint: disable=invalid-name
+    return db.F
 
 
 @pytest.fixture(scope="function")
 def reporter(request, env):
-    from lektor.reporter import BufferReporter
-
     r = BufferReporter(env)
     r.push()
     request.addfinalizer(r.pop)

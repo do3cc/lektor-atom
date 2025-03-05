@@ -67,7 +67,7 @@ def get_item_title(item, field):
 
 def get_item_body(item, field):
     if field not in item:
-        raise RuntimeError("Body field %r not found in %r" % (field, item))
+        raise RuntimeError(f"Body field {field!r} not found in {item!r}")
     with get_ctx().changed_base_url(item.url_path):
         return str(escape(item[field]))
 
@@ -132,14 +132,16 @@ class AtomFeedBuilderProgram(BuildProgram):
                     content=get_item_body(item, feed_source.item_body_field),
                     link=url_to(item, external=True),
                     unique_id=get_id(
-                        "%s/%s" % (ctx.env.project.id, item["_path"].encode("utf-8"))
+                        "{}/{}".format(
+                            ctx.env.project.id, item["_path"].encode("utf-8")
+                        )
                     ),
                     author_name=item_author,
                     updateddate=get_item_updated(item, feed_source.item_date_field),
                 )
 
             except Exception as exc:
-                msg = "%s: %s" % (item["_id"], exc)
+                msg = "{}: {}".format(item["_id"], exc)
                 click.echo(click.style("E", fg="red") + " " + msg)
 
         with artifact.open("wb") as f:
@@ -168,7 +170,7 @@ class AtomPlugin(Plugin):
 
     def get_atom_config(self, feed_id, key):
         default_value = self.defaults[key]
-        return self.get_config().get("%s.%s" % (feed_id, key), default_value)
+        return self.get_config().get(f"{feed_id}.{key}", default_value)
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(AtomFeedSource, AtomFeedBuilderProgram)

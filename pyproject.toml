@@ -3,3 +3,45 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+
+################################################################
+#
+# pylint
+#
+[tool.pylint.main]
+ignore = [".git"]
+load-plugins = "pylint.extensions.no_self_use"
+extension-pkg-allow-list = "lxml"
+
+[tool.pylint.format]
+max-line-length = 91
+max-module-lines = 2000
+
+[tool.pylint.design]
+#max-attributes = 20
+#max-positional-arguments = 7   # default is 5
+#max-locals = 30
+#max-branches = 20
+#max-nested-blocks = 8
+#max-returns = 8
+
+
+[tool.pylint."messages control"]
+disable = [
+#    "redundant-u-string-prefix",
+#    "consider-using-f-string",
+    "missing-docstring",
+#    "unused-argument",
+#    "redefined-outer-name",
+#    "invalid-name",
+#    "protected-access",
+#    "fixme",
+#    "broad-except",
+#    "redefined-builtin",
+#    "too-many-arguments",
+#    "too-few-public-methods",
+#    "too-many-public-methods",
+#    "duplicate-code",
+#    "unnecessary-dunder-call",
+]
+

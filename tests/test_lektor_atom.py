@@ -9,11 +9,12 @@ except ImportError:
     from urlparse import urljoin
 
 
-def test_typical_feed(pad, builder):
+def test_typical_feed(builder):
     failures = builder.build_all()
     assert not failures
     feed_path = os.path.join(builder.destination_path, "typical-blog/feed.xml")
-    feed = objectify.parse(open(feed_path)).getroot()
+    with open(feed_path, encoding="utf-8") as feed_stream:
+        feed = objectify.parse(feed_stream).getroot()
 
     assert "Feed One" == feed.title
     assert "My Summary" == feed.subtitle
@@ -51,11 +52,12 @@ def test_typical_feed(pad, builder):
     assert "A. Jesse Jiryu Davis" == post1.author.name
 
 
-def test_custom_feed(pad, builder):
+def test_custom_feed(builder):
     failures = builder.build_all()
     assert not failures
     feed_path = os.path.join(builder.destination_path, "custom-blog/atom.xml")
-    feed = objectify.parse(open(feed_path)).getroot()
+    with open(feed_path, encoding="utf-8") as feed_stream:
+        feed = objectify.parse(feed_stream).getroot()
 
     assert "Feed Three" == feed.title
     assert "<p>My Description</p>" == str(feed.subtitle).strip()
@@ -92,7 +94,7 @@ def test_custom_feed(pad, builder):
     assert "A. Jesse Jiryu Davis" == post1.author.name
 
 
-def test_virtual_resolver(pad, builder):
+def test_virtual_resolver(pad):
     # Pass a virtual source path to url_to().
     feed_path = "/typical-blog@atom/feed-one"
     url_path = pad.get("typical-blog/post1").url_to(feed_path)
@@ -117,15 +119,13 @@ def test_dependencies(pad, builder, reporter):
     reporter.clear()
     builder.build(pad.get("typical-blog@atom/feed-one"))
 
-    assert set(reporter.get_recorded_dependencies()) == set(
-        [
-            "Website.lektorproject",
-            "content/typical-blog",
-            "content/typical-blog/contents.lr",
-            "content/typical-blog/post1/contents.lr",
-            "content/typical-blog/post2/contents.lr",
-            "models/blog.ini",
-            "models/blog-post.ini",
-            "configs/atom.ini",
-        ]
-    )
+    assert set(reporter.get_recorded_dependencies()) == {
+        "Website.lektorproject",
+        "content/typical-blog",
+        "content/typical-blog/contents.lr",
+        "content/typical-blog/post1/contents.lr",
+        "content/typical-blog/post2/contents.lr",
+        "models/blog.ini",
+        "models/blog-post.ini",
+        "configs/atom.ini",
+    }
