@@ -2,7 +2,9 @@
 
 ## Development environment
 
-Create a development environment with `Python>=3.8`.
+### Pip
+
+Create a development environment with `Python>=3.9`.
 
 Please do not create a venv directly in the project directory.
 else pytest will find too many tests.
@@ -10,19 +12,32 @@ else pytest will find too many tests.
 You can then install the development and test dependencies with:
 
 ```bash
-python -m pip install --group dev --editable .
+python -m pip install --group dev --editable .venv
+source .venv/bin/activate
 ```
 
 [!WARNING]
 This example only works with pip in version 25.1 or newer.
 Version 25.1 has a planned release date of 2025-04-30
 
+### UV
+
+Tox requires a plug in to work with uv, to install all dependencies the command
+for syncing the environment needs to be thus:
+
+```bash
+uv sync --group=uv
+```
+
+Future code examples are valid for `pip` but work with uv too, if you prefix
+the commands with uv run.
+
 ## Tests
 
 To run the test suite, we use `pytest`:
 
 ```bash
-pytest . --tb=long -svv
+pytest
 ```
 
 ## Pre-commit
